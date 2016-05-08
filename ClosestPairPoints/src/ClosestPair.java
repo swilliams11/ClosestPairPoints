@@ -20,20 +20,21 @@ public class ClosestPair {
 	private int iteration = 0;
 	
 	public static void main(String[] args) {
-		System.out.println("10points.txt");
-		//ClosestPair cp = new ClosestPair("10points.txt", 10);
-		//cp.readPointFile();
-		//cp.findClosestPairStart();
+		String filenameS = "10points.txt"; 
+		System.out.println("\n" + filenameS);
+		ClosestPair cp = new ClosestPair(filenameS, 10);
+		cp.readPointFile();
+		cp.findClosestPairStart();
 		
-		/*
-		System.out.println("100points.txt");
-		ClosestPair cp2 = new ClosestPair("100points.txt", 100);
+		filenameS = "100points.txt";
+		System.out.println("\n" + filenameS);
+		ClosestPair cp2 = new ClosestPair(filenameS, 100);
 		cp2.readPointFile();
 		cp2.findClosestPairStart();
-		*/
 		
-		System.out.println("1000points.txt");
-		ClosestPair cp3 = new ClosestPair("1000points.txt", 1000);
+		filenameS = "1000points.txt";
+		System.out.println("\n" + filenameS);
+		ClosestPair cp3 = new ClosestPair(filenameS, 1000);
 		cp3.readPointFile();
 		cp3.findClosestPairStart();
 		
@@ -105,9 +106,8 @@ public class ClosestPair {
 	 */
 	public void findClosestPairStart() {
 		Point [] p = findClosestPair(points, pointsSortedByX, pointsSortedByY);
-		System.out.println("closest pair of points is " );;
-		printArray(p);
-		System.out.println("distance is " + distance(p[0], p[1]));
+		System.out.println("The minimum distance is: " );
+		System.out.println(distance(p[0], p[1]) + ": " + p[0] + "<----->" + p[1]);
 	}
 	
 	/*
@@ -164,7 +164,7 @@ public class ClosestPair {
 			Point [] yPrimeClosestPoints = findPointsWithinDelta(yPrime);
 			//System.out.println("distance of yPrimeClosestPoints is " 
 			//		+ distance(yPrimeClosestPoints[0], yPrimeClosestPoints[1]));
-			System.out.println("2nd min");
+			//System.out.println("2nd min");
 			//printArray(yPrimeClosestPoints);
 			if(yPrimeClosestPoints != null && yPrimeClosestPoints.length > 1){
 				closestPoints = min(closestPoints, yPrimeClosestPoints);
