@@ -20,9 +20,23 @@ public class ClosestPair {
 	private int iteration = 0;
 	
 	public static void main(String[] args) {
-		ClosestPair cp = new ClosestPair("10points.txt", 10);
-		cp.readPointFile();
-		cp.findClosestPairStart();
+		System.out.println("10points.txt");
+		//ClosestPair cp = new ClosestPair("10points.txt", 10);
+		//cp.readPointFile();
+		//cp.findClosestPairStart();
+		
+		/*
+		System.out.println("100points.txt");
+		ClosestPair cp2 = new ClosestPair("100points.txt", 100);
+		cp2.readPointFile();
+		cp2.findClosestPairStart();
+		*/
+		
+		System.out.println("1000points.txt");
+		ClosestPair cp3 = new ClosestPair("1000points.txt", 1000);
+		cp3.readPointFile();
+		cp3.findClosestPairStart();
+		
 	}
 	
 	public ClosestPair(String fileName, int numOfPoints){
@@ -77,13 +91,13 @@ public class ClosestPair {
 		//sort the array by x values
 		pointsSortedByX = Arrays.copyOf(points, numOfPoints);
 		Arrays.sort(pointsSortedByX, Comparator.comparing(Point::getX));
-		System.out.println("pointsSortedByX");
-		printArray(pointsSortedByX);
+		//System.out.println("pointsSortedByX");
+		//printArray(pointsSortedByX);
 		
 		pointsSortedByY = Arrays.copyOf(points, numOfPoints);
 		Arrays.sort(pointsSortedByY, Comparator.comparing(Point::getY));
-		System.out.println("pointsSortedByY");
-		printArray(pointsSortedByY);
+		//System.out.println("pointsSortedByY");
+		//printArray(pointsSortedByY);
 	}
 	
 	/*
@@ -116,29 +130,32 @@ public class ClosestPair {
 			//System.out.println(yl);
 			Point [] p_l = splitPL(p, 0, mid, xl);
 			//System.out.println("\np_l");
-			printArray(p_l);
+			//printArray(p_l);
 			
 			Point [] p_r = splitPR(p, mid + 1, x.length, xl);
 			//System.out.println("\np_r");
-			printArray(p_r);
+			//printArray(p_r);
 			//System.out.println("p_l.length=" + p_l.length);
 			//System.out.println("p_r.length=" + p_r.length);
 			
 			Point [] x_l = splitPL(x, 0, mid, xl);
 			//System.out.println("\nx_l");
-			printArray(x_l);
+			//printArray(x_l);
 			Point [] x_r = splitPR(x, mid + 1, x.length, xl);
 			//System.out.println("\nx_r");
-			printArray(x_r);
+			//printArray(x_r);
 			
 			Point [] y_l = createSortedSubsetArrayY(p_l, y);
 			//System.out.println("\ny_l");
-			printArray(y_l);
+			//printArray(y_l);
 			Point [] y_r = createSortedSubsetArrayY(p_r, y);
 			//System.out.println("\ny_r");
-			printArray(y_r);
+			//printArray(y_r);
 			Point [] closestPointsL = findClosestPair(p_l, x_l, y_l);
 			Point [] closestPointsR = findClosestPair(p_r, x_r, y_r);
+			//System.out.println("1st min");
+			//printArray(closestPointsL);
+			//printArray(closestPointsR);
 			Point [] closestPoints = min(closestPointsL, closestPointsR);
 			double delta = distance(closestPoints[0], closestPoints[1]);
 			//System.out.println("delta = " + delta);
@@ -147,7 +164,11 @@ public class ClosestPair {
 			Point [] yPrimeClosestPoints = findPointsWithinDelta(yPrime);
 			//System.out.println("distance of yPrimeClosestPoints is " 
 			//		+ distance(yPrimeClosestPoints[0], yPrimeClosestPoints[1]));
-			closestPoints = min(closestPoints, yPrimeClosestPoints);
+			System.out.println("2nd min");
+			//printArray(yPrimeClosestPoints);
+			if(yPrimeClosestPoints != null && yPrimeClosestPoints.length > 1){
+				closestPoints = min(closestPoints, yPrimeClosestPoints);
+			}
 			return closestPoints;
 		}		
 	}
@@ -266,13 +287,17 @@ public class ClosestPair {
 	public Point [] findPointsWithinDelta(Point [] yd){
 		double minDistance = Double.POSITIVE_INFINITY;
 		Point [] closestPoints = new Point[2];
-		for(int i = 0; i < yd.length; i++){
-			for(int j = i + 1; j < yd.length; j++){
-				double distance = distance(yd[i], yd[j]);
-				if(distance <= minDistance){
-					minDistance = distance;
-					closestPoints[0] = yd[i];
-					closestPoints[1] = yd[j];
+		if(yd.length == 1) {
+			closestPoints = null;
+		} else {
+			for(int i = 0; i < yd.length; i++){
+				for(int j = i + 1; j <= j + 7 && j < yd.length; j++){
+					double distance = distance(yd[i], yd[j]);
+					if(distance <= minDistance){
+						minDistance = distance;
+						closestPoints[0] = yd[i];
+						closestPoints[1] = yd[j];
+					}
 				}
 			}
 		}
