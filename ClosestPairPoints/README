@@ -1,0 +1,24 @@
+Written in Java 8
+JDK 1.8 required
+
+IDE: Eclipse -> Mars 4.5.1
+
+There are two java files: (1) ClosestPair.java and (2) Point.java
+
+There are three test files: (1) 10points.txt, (2) 100points.txt, (3) 1000points.txt.
+
+ClosestPair.java has the main method.  When you execute it, it finds the closest pair of points
+for all three test point files.  
+
+Result:
+10points.txt
+The minimum distance is: 
+947.4054042488885: (511, 4721)<----->(1267, 5292)
+
+100points.txt
+The minimum distance is: 
+90.44335243676011: (1730, 3258)<----->(1758, 3344)
+
+1000points.txt
+The minimum distance is: 
+47.853944456021594: (42980, 10593)<----->(42989, 10546)

@@ -85,7 +85,7 @@ public class ClosestPair {
 	}
 	
 	/*
-	 * Sort both the arrays by X and Y
+	 * Create two copies of the points array and sort both the arrays by X and Y
 	 */
 	public void sortArrays(){
 		//printArray(points);
@@ -103,6 +103,7 @@ public class ClosestPair {
 	
 	/*
 	 * Start the recursive method
+	 * @returns closest pair of points
 	 */
 	public void findClosestPairStart() {
 		Point [] p = findClosestPair(points, pointsSortedByX, pointsSortedByY);
@@ -112,6 +113,12 @@ public class ClosestPair {
 	
 	/*
 	 * find the closest pair of points.
+	 * Recursive method:
+	 * When the number of points is <= 3 then brute force search the points,
+	 * which only requires 3 comparisons.  
+	 * In all other cases divide points in half.
+	 * 
+	 * runs in O(n lg n) time
 	 */
 	public Point [] findClosestPair(Point [] p, Point [] x, Point [] y){
 		
@@ -123,6 +130,7 @@ public class ClosestPair {
 			return closestPoints;
 			//int minDistance = calcDistance(closestPoints);
 		} else {
+			//DIVIDE
 			int mid = x.length / 2;
 			int xl = findVerticalLine(x, mid);
 			//int yl = findHorizontalLine(mid);
@@ -139,27 +147,36 @@ public class ClosestPair {
 			//System.out.println("p_r.length=" + p_r.length);
 			
 			Point [] x_l = splitPL(x, 0, mid, xl);
+			Point [] x_r = splitPR(x, mid + 1, x.length, xl);
 			//System.out.println("\nx_l");
 			//printArray(x_l);
-			Point [] x_r = splitPR(x, mid + 1, x.length, xl);
+			
 			//System.out.println("\nx_r");
 			//printArray(x_r);
 			
+			//divide the array into y left and y right
 			Point [] y_l = createSortedSubsetArrayY(p_l, y);
+			Point [] y_r = createSortedSubsetArrayY(p_r, y);
 			//System.out.println("\ny_l");
 			//printArray(y_l);
-			Point [] y_r = createSortedSubsetArrayY(p_r, y);
 			//System.out.println("\ny_r");
 			//printArray(y_r);
+			
+			//CONQUER
+			//recurse on left and right
 			Point [] closestPointsL = findClosestPair(p_l, x_l, y_l);
 			Point [] closestPointsR = findClosestPair(p_r, x_r, y_r);
 			//System.out.println("1st min");
 			//printArray(closestPointsL);
 			//printArray(closestPointsR);
+			
+			//COMBINE
+			//find the min of the closest points of the left and the right 
 			Point [] closestPoints = min(closestPointsL, closestPointsR);
 			double delta = distance(closestPoints[0], closestPoints[1]);
 			//System.out.println("delta = " + delta);
 			
+			//check the points that are between 2Delta of l
 			Point [] yPrime = createYPrime(y, xl, delta);
 			Point [] yPrimeClosestPoints = findPointsWithinDelta(yPrime);
 			//System.out.println("distance of yPrimeClosestPoints is " 
@@ -173,11 +190,19 @@ public class ClosestPair {
 		}		
 	}
 	
+	/*
+	 * Find the vertical line (x-axis) to divide the points into two subsets.
+	 */
 	public int findVerticalLine(Point [] x, int middle) {
 		return x[middle].getX();
 	}
 
 	
+	/*
+	 * Create a new array with n/2 points.
+	 * All of these points are ON or to the Left the vertical line.
+	 * You could have the same point in Sr or Sl
+	 */
 	public Point [] splitPL(Point [] p, int start, int end, int l){
 		ArrayList<Point> ptemp = new ArrayList<>();
 		for (int i = 0; i < p.length; i++){
@@ -188,7 +213,12 @@ public class ClosestPair {
 		Point [] returnArray = new Point[ptemp.size()];
 		return ptemp.toArray(returnArray);
 	}
-		
+	
+	/*
+	 * Create a new array with n/2 points.
+	 * All of these points are ON or to the right the vertical line.
+	 * You could have the same point in Sr or Sl
+	 */
 	public Point [] splitPR(Point [] p, int start, int end, int l){
 		ArrayList<Point> ptemp = new ArrayList<>(end);
 		for (int i = 0; i < p.length; i++){
@@ -200,6 +230,11 @@ public class ClosestPair {
 		return ptemp.toArray(returnArray);
 	}
 	
+	/*
+	 * Create Y' which includes all the points in p, but they are sorted
+	 * by the y value.
+	 * @returns new array 
+	 */
 	public Point [] createSortedSubsetArrayY(Point [] p, Point [] sortedArray) {
 		ArrayList<Point> pArrayList = new ArrayList<>(Arrays.asList(p));
 		ArrayList<Point> ptemp = new ArrayList<>(p.length);
@@ -217,6 +252,7 @@ public class ClosestPair {
 	
 	/*
 	 * return the distance between two points;
+	 * sqrt((x1 - x2)^2 + (y1 - y2)^2)
 	 */
 	public double distance(Point p1, Point p2){
 		double xdiff = p1.getX() - p2.getX();
@@ -228,9 +264,12 @@ public class ClosestPair {
 	
 	/*
 	 * If the length is 2 then it returns the two points.
-	 * If the length is 3 then it compares all three points
+	 * If the length is 3 then it compares distance between all three points
 	 * and returns the closest pair of points.  
 	 * Items added to TreeMap remain in sorted order.
+	 * 
+	 * worst case is 3 comparison.
+	 * @returns closest points as an array.
 	 */
 	public Point [] determineClosestPoints(Point [] p) {
 		if(p.length == 2){
@@ -253,7 +292,7 @@ public class ClosestPair {
 	
 	/*
 	 * Return the pair of points with the minimum distance.
-	 * 
+	 * @returns pair of points as an array
 	 */
 	public Point [] min( Point [] pair1, Point [] pair2){
 		double d1 = distance(pair1[0], pair1[1]);
@@ -266,7 +305,9 @@ public class ClosestPair {
 	}
 	
 	/*
-	 * Create the array of all the points within 2Delta
+	 * Create the array of all the points within 2Delta.
+	 * This creates Y'
+	 * So the x value must be > l - delta and x must be < l + delta
 	 */
 	public Point [] createYPrime(Point [] y, int l, double delta) {
 		double lDelta = l - delta;
@@ -283,6 +324,10 @@ public class ClosestPair {
 	
 	/*
 	 * find the closest points within distance delta.
+	 * This compares each point in Y' to the next 7 points (at most).
+	 * If there are less than 7 points then it only compares up the the length Y'
+	 * 
+	 * returns closest pair of points.
 	 */
 	public Point [] findPointsWithinDelta(Point [] yd){
 		double minDistance = Double.POSITIVE_INFINITY;
